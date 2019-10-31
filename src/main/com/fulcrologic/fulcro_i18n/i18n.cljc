@@ -77,7 +77,7 @@
   "Ensure that the given locale is loaded. Is a no-op if there are translations in app state for the given locale
   which is a keyword like :es-MX."
   [app locale]
-  (let [state-map @(::app/state-atom app)]
+  (let [state-map (app/current-state app)]
     (when-not (is-locale-loaded? state-map locale)
       (df/load! app ::translations Locale {:params        {:locale locale}
                                            :marker        false
