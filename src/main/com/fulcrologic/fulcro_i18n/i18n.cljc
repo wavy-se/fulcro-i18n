@@ -50,7 +50,7 @@
                             nil))]
        (when translations
          {::locale       locale
-          ::translations (into {} (map (fn [t] [[(or (:msgctxt t) "") (:msgid t)] (:msgstr t)]) translations))}))))
+          ::translations (into {} (map (fn [t] [[(or (:msgctxt t) "") (:msgid t)] (:msgstr t)])) translations)}))))
 
 (defsc Locale
   "Represents the data of a locale in app state. Normalized by locale ID."
