@@ -65,6 +65,7 @@
   (action [{:keys [state app]}]
     (swap! state dissoc ::translations)
     (when app
+      (app/update-shared! app)
       (app/force-root-render! app))))
 
 (defn is-locale-loaded?
@@ -76,8 +77,8 @@
   "Ensure that the given locale is loaded. Is a no-op if there are translations in app state for the given locale
   which is a keyword like :es-MX."
   [app locale]
-  (let [state (app/current-state app)]
-    (when-not (is-locale-loaded? @state locale)
+  (let [state-map (app/current-state app)]
+    (when-not (is-locale-loaded? state-map locale)
       (df/load! app ::translations Locale {:params        {:locale locale}
                                            :marker        false
                                            :post-mutation `translations-loaded}))))
@@ -87,6 +88,7 @@
   (action [{:keys [state app]}]
     (ensure-locale-loaded! app locale)
     (swap! state assoc ::current-locale (comp/get-ident Locale {::locale locale}))
+    (app/update-shared! app)
     (app/force-root-render! app))
   (refresh [env]
     [::current-locale]))
